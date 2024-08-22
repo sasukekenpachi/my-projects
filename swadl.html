@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist News Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #000;
+            color: #fff;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .menu-icon {
+            display: none; /* Hide this for desktop, show on mobile */
+        }
+
+        .hero {
+            position: relative;
+            text-align: center;
+            color: white;
+            height: 300px; /* Reduced height of hero section */
+            overflow: hidden;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the hero section properly */
+            filter: brightness(50%);
+        }
+
+        .hero h1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px; /* Reduced font size */
+        }
+
+        .featured, .latest, .additional {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .featured .article, .latest article, .additional article {
+            flex: 1 1 calc(45% - 20px); /* Adjusted size for images */
+            margin: 10px;
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .featured .article img, .latest article img, .additional article img {
+            width: 100%;
+            height: 200px; /* Fixed height for images */
+            object-fit: cover; /* Ensures the image scales well within the container */
+            margin-bottom: 10px;
+        }
+
+        .podcast {
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .podcast h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .podcast-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .podcast-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .podcast-item {
+            min-width: 200px;
+            background-color: #444;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .podcast-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .podcast-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .video-section {
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .video-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .video-thumbnails .video-item {
+            flex: 1 1 calc(45% - 20px);
+            margin: 10px;
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .video-thumbnails .video-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .video-thumbnails .video-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .popup-content iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        footer {
+            padding: 20px;
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            header nav ul {
+                display: none;
+            }
+            .menu-icon {
+                display: block;
+            }
+            .featured .article, .latest article, .additional article, .video-thumbnails .video-item {
+                flex: 1 1 100%;
+            }
+            .podcast-slider {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">Platform X</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Articles</a></li>
+                <li><a href="#">Entertainment</a></li>
+                <li><a href="#">Sports</a></li>
+                <li><a href="#">Viral</a></li>
+                <li><a href="#">Fashion/Lifestyle/Brands</a></li>
+                <li><a href="#">Sex/Dating</a></li>
+                <li><a href="#">Gaming</a></li>
+                <li><a href="#">Travel/Leisure</a></li>
+                <li><a href="#">Utility</a></li>
+                <li><a href="#">News</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+        <div class="menu-icon">
+            <!-- Mobile Menu Icon -->
+            <span>&#9776;</span>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="C:\Users\VISHNU MK\Downloads\Gemini_Generated_Image_ucq0loucq0loucq0.jpeg" alt="Platform X">
+        <h1>Platform X</h1>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="featured">
+        <div class="article">
+            <img src="https://variety.com/wp-content/uploads/2024/02/Screen-Shot-2024-02-28-at-12.40.18-PM.png?w=1000&h=667&crop=1&resize=1360%2C907" alt="Featured Image">
+            <h2>How Taylor Swift rejuvenated World Economies</h2>
+        </div>
+        <div class="article">
+            <img src="https://dhruvrathee.com/images/dhruv-cover.jpg" alt="Featured Image">
+            <h2>How Dhruv Rathee became new media</h2>
+        </div>
+    </section>
+
+    <!-- Podcast Section -->
+    <section class="podcast">
+        <h2>Podcasts</h2>
+        <div class="podcast-slider">
+            <div class="podcast-item" data-url="https://podcast-url-1.com">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC5jItPEhizaQgqpMlS6WChM5rOR-82ZS8hw&s" alt="Podcast 1">
+                <p>Why cant we have more green forests than red flags</p>
+            </div>
+            <div class="podcast-item" data-url="https://podcast-url-2.com">
+                <img src="https://sc0.blr1.digitaloceanspaces.com/large/812912-38525-eoliupezpo-1470036622.png" alt="Podcast 2">
+                <p>Can we skip the casting couches</p>
+            </div>
+            <div class="podcast-item" data-url="https://podcast-url-3.com">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkRBpK0dePdXXf0pbufIZ3ZguPHyCL0VlN_g&s" alt="Podcast 3">
+                <p>genz and depression a match made in online</p>
+            </div>
+           <div class="podcast-item" data-url="https://podcast-url-4.com">
+                <img src="https://static.theprint.in/wp-content/uploads/2024/02/Influencers-696x392.jpg?compress=true&quality=80&w=376&dpr=2.6" alt="Podcast 4">
+                <p>How relatable are influencers</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section">
+        <h2>Videos</h2>
+        <div class="video-thumbnails">
+            <div class="video-item" data-url="https://www.youtube.com/embed/videoID1">
+                <img src="https://media.assettype.com/thenewsminute/2024-08-19/1rrcso65/Hema%20Committee.jpeg?w=1200&h=675&auto=format%2Ccompress&fit=max&enlarge=true" alt="Video 1">
+                <h3>Hema Committe 101</h3>
+            </div>
+            <div class="video-item" data-url="https://www.youtube.com/embed/videoID2">
+                <img src="https://static1.topspeedimages.com/wordpress/wp-content/uploads/2023/07/wrangler-vs-thar.jpg" alt="Video 2">
+                <h3>Thar Roaxx vs Wrangler</h3>
+            </div>
+            <div class="video-item" data-url="https://www.youtube.com/embed/videoID3">
+                <img src="https://assets.mubicdn.net/images/film/3174/image-w1280.jpg?1498800396" alt="Video 3">
+                <h3>Filimy Analysis</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pop-up Player -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="popup-close" id="popupClose">&times;</span>
+            <iframe src="" id="popupIframe" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Platform X. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Pop-up Player Script
+        const podcastItems = document.querySelectorAll('.podcast-item');
+        const videoItems = document.querySelectorAll('.video-item');
+        const popup = document.getElementById('popup');
+        const popupIframe = document.getElementById('popupIframe');
+        const popupClose = document.getElementById('popupClose');
+
+        const openPopup = (url) => {
+            popupIframe.src = url;
+            popup.style.display = 'flex';
+        };
+
+        podcastItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const url = item.getAttribute('data-url');
+                openPopup(url);
+            });
+        });
+
+        videoItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const url = item.getAttribute('data-url');
+                openPopup(url);
+            });
+        });
+
+        popupClose.addEventListener('click', () => {
+            popup.style.display = 'none';
+            popupIframe.src = '';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                popup.style.display = 'none';
+                popupIframe.src = '';
+            }
+        });
+    </script>
+
+</body>
+</html>
